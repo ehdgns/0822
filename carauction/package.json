@@ -1,0 +1,43 @@
+{
+  "engines": {
+    "composer": "^0.20.8"
+  },
+  "name": "carauction",
+  "version": "0.0.1",
+  "description": "carauction sample network",
+  "scripts": {
+    "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/carauction.bna",
+    "pretest": "npm run lint",
+    "lint": "eslint .",
+    "test": "nyc mocha -t 0 test/*.js && cucumber-js",
+    "setup": "cd ~/fabric-dev-servers && export FABRIC_VERSION=hlfv12 && ./startFabric.sh &&./createPeerAdminCard.sh",
+    "archive": "npm run prepublish",
+    "network_install": "composer network install --card PeerAdmin@hlfv1 --archiveFile ./dist/carauction",
+    "network_start": "composer network start --networkName carauction --networkVersion 0.0.1 --networkAdmin admin --networkAdminEnrollSecret adminpw --card PeerAdmin@hlfv1 --file ./dist/networkadmin.card",
+    "card_import": "composer card import --file networkadmin.card",
+    "ping": "composer network ping --card admin@carauction",
+    "start": "npm run setup && npm run archive && npm run network_install && npm run network_start && npm run card_import && npm run ping"
+  },
+  "keywords": [
+    "composer",
+    "composer-network"
+  ],
+  "author": "lee",
+  "email": "oioi8123@naver.com",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "composer-admin": "^0.20.8",
+    "composer-cli": "^0.20.8",
+    "composer-client": "^0.20.8",
+    "composer-common": "^0.20.8",
+    "composer-connector-embedded": "^0.20.8",
+    "composer-cucumber-steps": "^0.20.8",
+    "chai": "latest",
+    "chai-as-promised": "latest",
+    "cucumber": "^2.2.0",
+    "eslint": "latest",
+    "nyc": "latest",
+    "mkdirp": "latest",
+    "mocha": "latest"
+  }
+}

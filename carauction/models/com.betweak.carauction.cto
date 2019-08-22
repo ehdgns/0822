@@ -1,0 +1,67 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace com.betweak.carauction
+
+asset Car identified by vin {
+  o String vin
+  o String imageUri
+ --> Member owner
+}
+
+//enum: 새로운 데이터 타입 정의 
+enum ListingState {
+  o FOR_SALE
+  o RESERVE_NOT_MET
+  o SOLD
+}
+//카 리스팅: 경매 물품에 대해서 나타냄
+asset CarListing identified by listingId {
+  o String listingId
+  o Double reservePrice
+  o String description
+  o ListingState state
+  o Offer[] offers optional //오퍼 어떤 멤버가 경매에 입찰을 햇다
+  --> Car car
+  //--> : 외래키,참조
+}
+//abstract: 실제로 데이터를 만드는것 x,나중에 만들겠다.
+abstract participant  User identified by email {
+  o String email
+  o String firstName
+  o String lastName
+}
+
+participant Member extends User {
+  o Double balance
+}
+
+participant Auctioneer extends User  {
+  
+}
+
+transaction Offer {
+  o Double bidPrice
+  --> CarListing listing
+  --> Member member
+}
+
+transaction CloseBidding {
+  --> CarListing listing
+}
+
